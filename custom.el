@@ -121,6 +121,8 @@
        "https://github.com/jdtsmith/ultra-scroll")
      )))
 
+                                        ; installed gptel with package-vc-install
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -159,14 +161,12 @@ The DWIM behaviour of this command is as follows:
 ;; pass init <gpg-key>  - no quotes!
 ;; pass insert <key-name>
 ;; view passes with pass, see gpg keys with `gpg --list-keys`
-
 (autoload 'auth-source-search "auth-source")
                                         ; able to key in pass correctly
 (use-package pinentry
   :defer
   :config
   (pinentry-start)) ;; be able to enter password: "allow-emacs-pinentry" >> ~/.gnupg/gpg-agent.conf
-
 (defun set-openrouter-api-key ()
   (interactive)
   (let ((api-key (auth-source-pass-get 'secret "api-key/openrouter")))
@@ -190,5 +190,28 @@ The DWIM behaviour of this command is as follows:
   :bind
   (("C-z a" . aidermacs-transient-menu)))
 
-
+(use-package gptel
+  :ensure nil
+  :init (unless (package-installed-p 'gptel)
+          (package-vc-install "https://github.com/karthink/gptel"))
+  (defvar gptel--openrouter
+    (gptel-make-openai "OpenRouter"
+      :host "openrouter.ai"
+      :endpoint "/api/v1/chat/completions"
+      :stream t
+      :key (lambda () (auth-source-pass-get 'secret "api-key/openrouter"))
+      :models '(anthropic/claude-3.7-sonnet
+                openai/o3-mini-high
+                openai/gpt-4o-mini
+                openai/gpt-4o)))
+  :bind
+  (("C-c <return>" . gptel-send)
+   ("C-c C-<return>" . gptel-menu)
+   )
+  :custom
+  (gptel-default-mode 'org-mode)
+  :config
+  (setq gptel-backend gptel--openrouter
+        gptel-model 'anthropic/claude-3.7-sonnet)
+  )
 ;;; custom.el ends here
