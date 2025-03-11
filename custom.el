@@ -214,4 +214,20 @@ The DWIM behaviour of this command is as follows:
   (setq gptel-backend gptel--openrouter
         gptel-model 'anthropic/claude-3.7-sonnet)
   )
+
+(use-package buffer-terminator
+  :defer 5
+  :custom
+  (buffer-terminator-verbose nil)
+  :config
+  (buffer-terminator-mode))
+
+(defun jm/choose-font-size ()
+  "Choose between three different font sizes: 16, 18, and 20."
+  (interactive)
+  (set-face-attribute 'default nil :height
+                      (* 10 (string-to-number
+                             (completing-read "Choose font size: "
+                                              (mapcar #'number-to-string '(16 18 20)))))))
+
 ;;; custom.el ends here
