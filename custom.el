@@ -191,9 +191,15 @@ The DWIM behaviour of this command is as follows:
   (("C-z a" . aidermacs-transient-menu)))
 
 (use-package gptel
-  :ensure nil
   :init (unless (package-installed-p 'gptel)
           (package-vc-install "https://github.com/karthink/gptel"))
+  :bind
+  (("C-c <return>" . gptel-send)
+   ("C-c C-<return>" . gptel-menu)
+   )
+  :custom
+  (gptel-default-mode 'org-mode)
+  :config
   (defvar gptel--openrouter
     (gptel-make-openai "OpenRouter"
       :host "openrouter.ai"
@@ -204,13 +210,7 @@ The DWIM behaviour of this command is as follows:
                 openai/o3-mini-high
                 openai/gpt-4o-mini
                 openai/gpt-4o)))
-  :bind
-  (("C-c <return>" . gptel-send)
-   ("C-c C-<return>" . gptel-menu)
-   )
-  :custom
-  (gptel-default-mode 'org-mode)
-  :config
+
   (setq gptel-backend gptel--openrouter
         gptel-model 'anthropic/claude-3.7-sonnet)
   )
@@ -229,5 +229,45 @@ The DWIM behaviour of this command is as follows:
                       (* 10 (string-to-number
                              (completing-read "Choose font size: "
                                               (mapcar #'number-to-string '(16 18 20)))))))
+
+;; the new spliting way the utility when I split the screen with C-x 2 or C-x 3, it opens the previous buffer instead of giving me two panes with the same buffer:
+(defun my-vsplit-last-buffer ()
+  (interactive)
+  (split-window-vertically)
+  (other-window 1 nil)
+  (switch-to-next-buffer))
+
+(defun my-hsplit-last-buffer ()
+  (interactive)
+  (split-window-horizontally)
+  (other-window 1 nil)
+  (switch-to-next-buffer))
+
+(bind-key "C-x 2" 'my-vsplit-last-buffer)
+(bind-key "C-x 3" 'my-hsplit-last-buffer)
+
+(defun split-and-follow-horizontally ()
+  "Split window horizontally and move to the new window."
+  (interactive)
+  (select-window (split-window-below)))
+
+(defun split-and-follow-vertically ()
+  "Split window vertically and move to the new window."
+  (interactive)
+  (select-window (split-window-right)))
+
+(defun split-and-follow-horizontally-and-open (file)
+  "Split window horizontally, move to the new window, and open FILE."
+  (split-and-follow-horizontally)
+  (find-file file))
+
+(defun split-and-follow-vertically-and-open (file)
+  "Split window vertically, move to the new window, and open FILE."
+  (split-and-follow-vertically)
+  (find-file file))
+
+(with-eval-after-load 'embark
+  (define-key embark-file-map (kbd "X") #'split-and-follow-horizontally-and-open)
+  (define-key embark-file-map (kbd "V") #'split-and-follow-vertically-and-open))
 
 ;;; custom.el ends here

@@ -149,11 +149,11 @@ Otherwise the startup will be very slow."
 (require 'init-prog)
 (require 'init-elisp)
 (require 'init-c)
-(require 'init-go)
-(require 'init-rust)
+;; (require 'init-go)
+;; (require 'init-rust)
 (require 'init-python)
 (require 'init-ruby)
-(require 'init-elixir)
+;; (require 'init-elixir)
 (require 'init-web)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
