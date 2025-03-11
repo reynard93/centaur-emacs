@@ -243,7 +243,11 @@
 
 ;; Increase selected region by semantic units
 (use-package expand-region
-  :bind ("C-=" . er/expand-region)
+  :bind
+  (("C-=" . er/expand-region)
+   ("C-=" . er/expand-region)
+   ("C-<kp-equal>" . er/expand-region)
+   ("C--" . er/contract-region))
   :config
   (when (centaur-treesit-available-p)
     (defun treesit-mark-bigger-node ()
@@ -276,7 +280,7 @@
          ("C-|" . mc/vertical-align-with-space))
   :pretty-hydra
   ((:title (pretty-hydra-title "Multiple Cursors" 'mdicon "nf-md-cursor_move")
-    :color amaranth :quit-key ("q" "C-g"))
+           :color amaranth :quit-key ("q" "C-g"))
    ("Up"
 	(("p" mc/mark-previous-like-this "prev")
 	 ("P" mc/skip-to-previous-like-this "skip")
