@@ -222,14 +222,6 @@ The DWIM behaviour of this command is as follows:
   :config
   (buffer-terminator-mode))
 
-(defun jm/choose-font-size ()
-  "Choose between three different font sizes: 16, 18, and 20."
-  (interactive)
-  (set-face-attribute 'default nil :height
-                      (* 10 (string-to-number
-                             (completing-read "Choose font size: "
-                                              (mapcar #'number-to-string '(16 18 20)))))))
-
 ;; the new spliting way the utility when I split the screen with C-x 2 or C-x 3, it opens the previous buffer instead of giving me two panes with the same buffer:
 (defun my-vsplit-last-buffer ()
   (interactive)
